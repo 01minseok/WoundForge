@@ -1,15 +1,22 @@
-
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField]
-    private float moveSpeed = 5f;
+    [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float dashSpeed = 15f;
+    [SerializeField] private float dashDuration = 0.15f;
+    [SerializeField] private float dashCooldown = 0.6f;
 
     private Rigidbody2D rb;
     private Vector2 moveInput;
+    private Vector2 lastDirection = Vector2.down;
+    private Vector2 dashDirection;
+    private float dashTimeLeft;
+    private float nextDashTime;
+    public Vector2 FacingDirection => lastDirection;
+    public bool IsInvincible => dashTimeLeft > 0f;
 
     private void Awake()
     {
@@ -38,10 +45,32 @@ public class PlayerMovement : MonoBehaviour
             moveInput.x += 1;
 
         moveInput = moveInput.normalized;
+
+        if (dashTimeLeft > 0f)
+            return;
+
+        if (moveInput != Vector2.zero)
+            lastDirection = moveInput;
+
+        if (Keyboard.current.spaceKey.wasPressedThisFrame
+            && Time.time >= nextDashTime)
+        {
+            dashDirection = lastDirection;
+            dashTimeLeft = dashDuration;
+            nextDashTime = Time.time + dashCooldown;
+        }
     }
 
     private void FixedUpdate()
     {
-        rb.linearVelocity = moveInput * moveSpeed;
+        if (dashTimeLeft > 0f)
+        {
+            rb.linearVelocity = dashDirection * dashSpeed;
+            dashTimeLeft -= Time.fixedDeltaTime;
+        }
+        else
+        {
+            rb.linearVelocity = moveInput * moveSpeed;
+        }
     }
 }
