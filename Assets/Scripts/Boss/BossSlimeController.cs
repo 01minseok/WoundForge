@@ -26,7 +26,7 @@ public class BossSlimeController : MonoBehaviour
     [SerializeField] private float moveSpeed = 2f;
 
     // 플레이어와 이 거리 이하로 가까워지면 이동을 멈춤
-    [SerializeField] private float stopDistance = 1.5f;
+    [SerializeField] private float stopDistance = 0.1f;
 
 
     // ===== 3. 2페이즈 설정 =====

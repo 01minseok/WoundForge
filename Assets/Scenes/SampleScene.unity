@@ -722,7 +722,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BossSlimeController
   player: {fileID: 1178899216}
   moveSpeed: 2
-  stopDistance: 1.5
+  stopDistance: 0.1
   phase2Health: 150
   phase2Speed: 3
 --- !u!114 &654812417
